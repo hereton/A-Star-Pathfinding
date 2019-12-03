@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pathfinding : MonoBehaviour
 {
+    public Dropdown Options;
+    private IHeuristics Heuristic;
+
 
     Grid GridReference;//For referencing the grid class
     public Transform StartPosition;//Starting position to pathfind from
@@ -16,8 +20,29 @@ public class Pathfinding : MonoBehaviour
 
     private void Awake()//When the program starts
     {
+        Heuristic = new ManhattanDistance();
+
+        Options.onValueChanged.AddListener((int value) =>
+        {
+            if (value == 0)
+            {
+                Heuristic = new ManhattanDistance();
+            }
+            else if (value == 1)
+            {
+                Heuristic = new DiagonalDistance();
+            }
+            else if (value == 2)
+            {
+                Heuristic = new EuclideanDistance();
+            }
+
+        });
+
         ObjPosition = ObjToMove.transform;
         GridReference = GetComponent<Grid>();//Get a reference to the game manager
+
+
     }
 
     private void Update()//Every frame
@@ -70,7 +95,7 @@ public class Pathfinding : MonoBehaviour
                 if (MoveCost < NeighborNode.igCost || !OpenList.Contains(NeighborNode))//If the f cost is greater than the g cost or it is not in the open list
                 {
                     NeighborNode.igCost = MoveCost;//Set the g cost to the f cost
-                    NeighborNode.ihCost = GetManhattenDistance(NeighborNode, TargetNode);//Set the h cost
+                    NeighborNode.ihCost = Heuristic.GetDistance(NeighborNode, TargetNode);//Set the h cost
                     NeighborNode.ParentNode = CurrentNode;//Set the parent of the node for retracing steps
 
                     if (!OpenList.Contains(NeighborNode))//If the neighbor is not in the openlist

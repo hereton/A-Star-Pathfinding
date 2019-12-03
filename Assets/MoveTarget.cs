@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class MoveTarget : MonoBehaviour
 {
+    Pathfinding pf;
     public LayerMask hitLayers;
+    private void Awake()
+    {
+        pf = GameObject.Find("GameManager").GetComponent<Pathfinding>();
+    }
     void Update()
     {
         if (Input.GetMouseButtonDown(0))//If the player has left clicked
         {
+            pf.IsFinalPath = false;
             Vector3 mouse = Input.mousePosition;//Get the mouse Position
             Ray castPoint = Camera.main.ScreenPointToRay(mouse);//Cast a ray to get where the mouse is pointing at
             RaycastHit hit;//Stores the position where the ray hit.

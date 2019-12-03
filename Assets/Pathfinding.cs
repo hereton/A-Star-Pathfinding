@@ -9,22 +9,30 @@ public class Pathfinding : MonoBehaviour
     public Transform StartPosition;//Starting position to pathfind from
     public Transform TargetPosition;//Starting position to pathfind to
     public GameObject ObjToMove;
-
+    private Transform ObjPosition;
     bool Done = false;
+    public bool IsFinalPath = false;
     private List<Node> currentFinalPath = new List<Node>();
 
     private void Awake()//When the program starts
     {
+        ObjPosition = ObjToMove.transform;
         GridReference = GetComponent<Grid>();//Get a reference to the game manager
     }
 
     private void Update()//Every frame
     {
-        FindPath(StartPosition.position, TargetPosition.position);//Find a path to the goal
+        if (!IsFinalPath)
+        {
+            IsFinalPath = true;
+
+            FindPath(ObjPosition.position, TargetPosition.position);//Find a path to the goal
+        }
     }
 
     void FindPath(Vector3 a_StartPos, Vector3 a_TargetPos)
     {
+
         Node StartNode = GridReference.NodeFromWorldPoint(a_StartPos);//Gets the node closest to the starting position
         Node TargetNode = GridReference.NodeFromWorldPoint(a_TargetPos);//Gets the node closest to the target position
 
@@ -73,6 +81,7 @@ public class Pathfinding : MonoBehaviour
             }
 
         }
+
     }
 
 
@@ -102,7 +111,6 @@ public class Pathfinding : MonoBehaviour
         if (!Done)
         {
             StopAllCoroutines();
-
             currentFinalPath = FinalPath;
             Done = true;
             StartCoroutine(Move(FinalPath));

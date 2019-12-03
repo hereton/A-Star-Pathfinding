@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node {
+public class Node
+{
+    public GameObject m_cube;
 
     public int iGridX;//X Position in the Node Array
     public int iGridY;//Y Position in the Node Array
@@ -23,6 +25,11 @@ public class Node {
         vPosition = a_vPos;//The world position of the node.
         iGridX = a_igridX;//X Position in the Node Array
         iGridY = a_igridY;//Y Position in the Node Array
+
+        m_cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        m_cube.transform.position = new Vector3(vPosition.x, 0.1f, vPosition.z);
+        m_cube.gameObject.SetActive(false);
+
     }
 
 }

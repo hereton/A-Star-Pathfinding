@@ -7,7 +7,7 @@ public class Pathfinding : MonoBehaviour
 {
     public Dropdown Options;
     private IHeuristics Heuristic;
-
+    public Grid Grid;
 
     Grid GridReference;//For referencing the grid class
     public Transform StartPosition;//Starting position to pathfind from
@@ -17,6 +17,8 @@ public class Pathfinding : MonoBehaviour
     bool Done = false;
     public bool IsFinalPath = false;
     private List<Node> currentFinalPath = new List<Node>();
+
+
 
     private void Awake()//When the program starts
     {
@@ -49,6 +51,7 @@ public class Pathfinding : MonoBehaviour
     {
         if (!IsFinalPath)
         {
+
             IsFinalPath = true;
 
             FindPath(ObjPosition.position, TargetPosition.position);//Find a path to the goal
@@ -124,10 +127,18 @@ public class Pathfinding : MonoBehaviour
 
         FinalPath.Reverse();//Reverse the path to get the correct order
 
+
+        foreach (Node n in FinalPath)
+        {
+            n.m_cube.SetActive(true);
+            n.m_cube.GetComponent<Renderer>().material.color = Color.red;
+        }
         GridReference.FinalPath = FinalPath;//Set the final path
+
 
         if (currentFinalPath.Count != 0 && !currentFinalPath[currentFinalPath.Count - 1].Equals(FinalPath[FinalPath.Count - 1]))
         {
+            Debug.Log("saf");
             currentFinalPath = FinalPath;
             Done = false;
         }
@@ -156,9 +167,13 @@ public class Pathfinding : MonoBehaviour
     {
         foreach (Node n in finalPath)
         {
-            Debug.Log(n.iGridX + "," + n.iGridY);
+            //Debug.Log(n.iGridX + "," + n.iGridY);
             ObjToMove.transform.localPosition = new Vector3(n.iGridX + 0.5f, 0.5f, n.iGridY + 0.5f);
+
+
             yield return new WaitForSeconds(0.1f);
         }
+        Grid.ResetFinalPathCube();
+
     }
 }

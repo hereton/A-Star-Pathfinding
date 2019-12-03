@@ -12,6 +12,7 @@ public class Grid : MonoBehaviour
     public float fDistanceBetweenNodes;//The distance that the squares will spawn from eachother.
     public GameObject MoveObject;
 
+
     Node[,] NodeArray;//The array of nodes that the A Star algorithm uses.
     public List<Node> FinalPath;//The completed path that the red line will be drawn along
 
@@ -121,7 +122,13 @@ public class Grid : MonoBehaviour
         return NodeArray[ix, iy];
     }
 
-
+    public void ResetFinalPathCube()
+    {
+        foreach (Node n in NodeArray)
+        {
+            n.m_cube.SetActive(false);
+        }
+    }
     //Function that draws the wireframe
     private void OnDrawGizmos()
     {
@@ -133,10 +140,12 @@ public class Grid : MonoBehaviour
             {
                 if (n.bIsWall)//If the current node is a wall node
                 {
+
                     Gizmos.color = Color.white;//Set the color of the node
                 }
                 else
                 {
+
                     Gizmos.color = Color.yellow;//Set the color of the node
                 }
 
@@ -150,8 +159,6 @@ public class Grid : MonoBehaviour
                     }
 
                 }
-
-
                 Gizmos.DrawCube(n.vPosition, Vector3.one * (fNodeDiameter - fDistanceBetweenNodes));//Draw the node at the position of the node.
             }
         }
